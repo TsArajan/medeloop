@@ -1,11 +1,7 @@
-const validator = require('../../../modules/validators/api/index')
-const UserService = require('../services/UserService')
+const UserService = require('../services/UserService');
 const responseHelper = require('../../api/resources/response');
 const messages = require('../../../../config/constant.json');
-const { sequelize, UserDeviceToken } = require('../../../data/models');
-const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const path = require('path');
 require('../../../../config/passport')(passport);
 
 class UserController {

@@ -128,6 +128,18 @@ class ApiValidation{
                     'any.only': 'confirm password does not match'
                 }),
             })
+            return await schema.validateAsync(body, options);
+        } catch (error) {
+            error.message = error.details[0].message;
+            error.code = 400;
+            return promise.reject(error)
+        }
+    }
+    async outlookToken(body){
+        try {
+            const schema = joi.object({
+                code : joi.required()
+            })
             return await schema.validateAsync(body, options)
         } catch (error) {
             error.message = error.details[0].message;
@@ -135,7 +147,46 @@ class ApiValidation{
             return promise.reject(error)
         }
     }
-    
+    async outlookRefreshToken(body){
+        try {
+            const schema = joi.object({
+                refresh_token : joi.required()
+            })
+            return await schema.validateAsync(body, options)
+        } catch (error) {
+            console.log(error);
+            error.message = error.details[0].message;
+            error.code = 400;
+            return promise.reject(error)
+        }
+    }
+    async validateOutlookToken(headers){
+        try {
+            const schema = joi.object({
+                authorization : joi.required()
+            }).unknown();
+            return await schema.validateAsync(headers, options)
+        } catch (error) {
+            console.log(error);
+            error.message = error.details[0].message;
+            error.code = 400;
+            return promise.reject(error)
+        }
+    }
+
+    async validateCalenderEvent(body){
+        try {
+            const schema = joi.object({
+                calendar_id : joi.required()
+            }).unknown();
+            return await schema.validateAsync(body, options)
+        } catch (error) {
+            console.log(error);
+            error.message = error.details[0].message;
+            error.code = 400;
+            return promise.reject(error)
+        }
+    }
 }
 
 module.exports = new ApiValidation();

@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const passport = require("passport");
 const {User,UserDeviceToken} = require('../../data/models/index');
 const responseHelper = require('../../v1/api/resources/response');
+const validator = require('../validators/api/index');
 
 const getToken = headers => {
     if (!headers.authorization) {
@@ -51,11 +52,7 @@ class GlobalAuthClass {
         try {
             console.log("Res", req.headers)
             //   let data = await validate.validateHeaders(req.headers);
-            var validation = await validate.validateHeaders(req.headers);
-            console.log("check:::", validation.status)
-            if (validation.status == false) {
-                return responseHelper.error(res, validation.message, req.headers.langauge, null, 400);
-            }
+            await validate.validateHeaders(req.headers);
             // console.log("data::",data)
             const token = await getToken(req.headers);
             // console.log("token:::",token);
@@ -79,9 +76,6 @@ class GlobalAuthClass {
     async initialAuthenticate(req, res, next) {
         try {
             var validation = await validate.validateHeaders(req.headers);
-            if (validation.status == false) {
-                return responseHelper.error(res, validation.message || '', error.code || 400);
-            }
             if (req.headers.authorization == process.env.APP_TOKEN) {
                 next();
             } else {
@@ -143,6 +137,20 @@ class GlobalAuthClass {
                 next()
             })(req, res, next);
         } catch (error) {
+            return responseHelper.error(res, error.message || '', error.code || 500);
+        }
+    }
+    async validateOutlookToken(req,res,next){
+        try {
+            await validator.validateOutlookToken(req.headers);
+            const token = await getToken(req.headers);
+            if (!token){
+                var error = new Error("CAN'T GET TOKEN")
+                error.code = 400;
+                throw error;
+            };
+            next();
+        }catch(error){
             return responseHelper.error(res, error.message || '', error.code || 500);
         }
     }

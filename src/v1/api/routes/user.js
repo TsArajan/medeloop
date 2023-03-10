@@ -23,10 +23,11 @@ router.get('/verify-email/:uuid', UserController.verifyMail);
 
 // refresh token
 router.post('/refresh-token',UserController.refreshToken)
+
 // forgot password
 router.post('/forgot-password',GlobalAuthClass.initialAuthenticate,UserController.forgotPassword)
 
-// change password  
+// change password
 router.post('/change-password',GlobalAuthClass.passportAuthenticate,UserController.changePassword)
 
 module.exports = router;

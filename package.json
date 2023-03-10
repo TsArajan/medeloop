@@ -1,7 +1,7 @@
 {
-  "name": "leva",
+  "name": "medeloop",
   "version": "1.0.0",
-  "description": "just for learning mongodb",
+  "description": "medeloop",
   "main": "index.js",
   "scripts": {
     "test": "npm start",
@@ -9,9 +9,9 @@
     "devStart": "nodemon index.js"
   },
   "keywords": [
-    "leva",
+    "medeloop",
     "app",
-    "mongodb"
+    "postgres"
   ],
   "author": "arajan nandaniya",
   "license": "ISC",
@@ -28,6 +28,7 @@
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
+    "express-group-router": "^2.1.0",
     "express-session": "^1.17.3",
     "googleapis": "^112.0.0",
     "joi": "^17.7.0",
