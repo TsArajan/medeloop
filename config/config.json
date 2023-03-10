@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgresDB2020",
+    "database": "medloop",
+    "host": "tristatepostgresql.chkbypvvasb2.us-west-1.rds.amazonaws.com",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "postgresDB2020",
+    "database": "medloop",
+    "host": "tristatepostgresql.chkbypvvasb2.us-west-1.rds.amazonaws.com",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "postgresDB2020",
+    "database": "medloop",
+    "host": "tristatepostgresql.chkbypvvasb2.us-west-1.rds.amazonaws.com",
+    "dialect": "postgres"
+  }
+}
