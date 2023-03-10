@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class PatientDetails extends Model {
+  class TaskDetails extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,32 +13,39 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  PatientDetails.init({
+  TaskDetails.init({
+    creater_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    profile_pic: {
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    collaborate: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    age: {
+    patient: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    is_active: {
-      type: DataTypes.INTEGER,
-      defaultValue: 1
-    },
-    is_doctor: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
-    },
-
+    other: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    }
   }, {
     sequelize,
-    tableName: 'patient_detail',
-    modelName: 'PatientDetails',
+    tableName: 'task_details',
+    modelName: 'TaskDetails',
   });
-  return PatientDetails;
+  return TaskDetails;
 };

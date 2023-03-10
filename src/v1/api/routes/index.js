@@ -1,10 +1,10 @@
 const express = require('express');
+require('express-group-routes');
 const UserController = require('../controllers/UserController');
 const OutlookController = require('../controllers/OutlookController');
-// const router = express.Router()
+const TaskController = require('../controllers/taskController')
+const router = express.Router()
 const GlobalAuthClass = require('../../../modules/middleware/auth');
-const Router = require('express-group-router');
-let router = new Router();
 
 /* get google calendar list */
 router.post('/calenderList', UserController.calenderList);
@@ -35,4 +35,11 @@ router.group('/outlook',(router) => {
     router.post('/get-calendar-events', GlobalAuthClass.validateOutlookToken,OutlookController.getCalenderEvents);
 })
 
-module.exports = router.init();
+router.group('/todotask', (todotask) => {
+  todotask.post('/createTask', [TaskController.createTask]);
+  todotask.post('/getTaskById', [TaskController.getTaskById]);
+  todotask.post('/taskList', [TaskController.taskList]);
+  todotask.post('/deletetask', [TaskController.deletetask]);
+  todotask.post('/editTask', [TaskController.editTask]);
+})
+module.exports = router

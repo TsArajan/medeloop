@@ -209,7 +209,11 @@ class UserService {
       let {
         user_id = 1,
         year,
-        month
+        month,
+        google_id,
+        googleCalendar_id,
+        outlook_id,
+        apple_id
       } = body, startDate, endDate;
 
       if (year && month) {
@@ -223,9 +227,53 @@ class UserService {
       startDate = new Date(startDate);
       endDate = new Date(endDate);
       // console.log(date)
+      let where2 = {
+        type: 0,
+        createdAt: {
+          [Op.gte]: startDate,
+          [Op.lte]: endDate
+        }
+      }
+      let where = {};
 
+      if (google_id != null) {
+        where.createdAt = {
+          [Op.gte]: startDate,
+          [Op.lte]: endDate
+        }
+        where.mail_id = google_id,
+          where.calendar_id = googleCalendar_id,
+          where.type = 1
+      }
+      if (outlook_id != null) {
+        where.createdAt = {
+          [Op.gte]: startDate,
+          [Op.lte]: endDate
+        }
+        where.mail_id == outlook_id
+        where.type == 2
+      }
+      if (google_id != null) {
+        where.createdAt = {
+          [Op.gte]: startDate,
+          [Op.lte]: endDate
+        }
+        where.apple_id == apple_id
+        where.type == 3
+      }
+      // [sequelize.literal(`"type" = 1
+      //     and ("createdAt" >= '2023-02-28 18:30:00.000 +00:00'
+      //       and "createdAt" <= '2023-03-31 18:29:59.999 +00:00')
+      //     and "mail_id" = 'tristate.testing321@gmail.com'
+      //     and "calendar_id" = 'tristate.testing321@gmail.com') or type = 0`)]
       // return []
       let eventList = await EventList.findAll({
+        where: {
+          [Op.or]: [where, where2]
+        }
+      });
+      // console.log('eventList =====>', eventList)
+      /* let eventList = await EventList.findAll({
         where: {
           user_id: user_id,
           createdAt: {
@@ -233,7 +281,7 @@ class UserService {
             [Op.lte]: endDate
           }
         }
-      });
+      }); */
 
       /* let eventList = await EventList.findAll({
         where: {
@@ -254,17 +302,29 @@ class UserService {
   async patientDetail(body) {
     try {
       let {
-        user_id
-      } = body;
+        user_id,
+        is_doctor
+      } = body, eventList = [];
 
-      let eventList = await PatientDetails.findAll({
-        attributes: ['id', 'name', 'profile_pic', 'age', 'createdAt'],
-        where: {
-          is_active: 1
-        }
-      });
+      if (is_doctor == 1) {
+        eventList = await PatientDetails.findAll({
+          attributes: ['id', 'name', 'profile_pic', 'age', 'createdAt'],
+          where: {
+            is_active: 1,
+            is_doctor: 1
+          }
+        });
+      } else {
+        eventList = await PatientDetails.findAll({
+          attributes: ['id', 'name', 'profile_pic', 'age', 'createdAt'],
+          where: {
+            is_active: 1,
+            is_doctor: 0
+          }
+        });
+      }
 
-      return eventList || []
+      return eventList
     } catch (error) {
       return Promise.reject(error)
     }
