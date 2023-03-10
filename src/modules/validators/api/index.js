@@ -177,7 +177,8 @@ class ApiValidation{
     async validateCalenderEvent(body){
         try {
             const schema = joi.object({
-                calendar_id : joi.required()
+                calendar_id : joi.required(),
+                email:joi.required(),
             }).unknown();
             return await schema.validateAsync(body, options)
         } catch (error) {

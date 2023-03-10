@@ -1,6 +1,8 @@
 const fetch = require('node-fetch');
 const promise = require('bluebird');
 const FormData = require('form-data');
+const { sequelize,EventList } = require('../../../data/models');
+const { QueryTypes } = require('sequelize');
 
 class OutlookService{
     async getAccessToken(req){
@@ -85,8 +87,9 @@ class OutlookService{
         }
     }
 
-    async getCalenderEvents(token,calendarId){
+    async getCalenderEvents(token,calendarId,email){
         try{
+            let newEventData = [];
             let calendarData = await fetch(`https://graph.microsoft.com/v1.0/me/calendars/${calendarId}/events`,{
                 method :'GET',
                 headers:{'Authorization':token},
@@ -96,12 +99,47 @@ class OutlookService{
                 throw {message:calenderListData.error_description||calenderListData.error.message,code:501};
             }
             if(calenderListData.value.length > 0){
-                calenderListData.value.forEach(event => {
-                    
+                let eventData = [];
+                let eventIds = '';
+                calenderListData.value.forEach((event,key) => {
+                    let data = {
+                        mail_id:email,
+                        event_id:event.id,
+                        start_time:event.start.dateTime,
+                        end_time:event.end.dateTime,
+                        summary:event.subject,
+                        calendar_id:calendarId,
+                        type:2
+                    }
+                    eventData.push(data);
+                    if(key >0){
+                        eventIds = eventIds+','+event.id 
+                    }else{
+                        eventIds = event.id;
+                    }
                 });
+                let ids = await sequelize.query(`SELECT t.value FROM unnest(string_to_array('${eventIds}', ',')) AS t(value)  
+                                        LEFT JOIN event_lists ON t.value = event_lists.event_id WHERE event_lists.event_id IS NULL`,{ type: QueryTypes.SELECT })
+                ids.forEach((id)=>{
+                    const resultData = eventData.find((event) => id.value == event.event_id);
+                    if(resultData != undefined){
+                        newEventData.push(resultData)
+                    }
+                });
+                if(newEventData.length > 0){
+                    await EventList.bulkCreate(newEventData);
+                }
             }
-            return calenderListData;
+            let eventList = await EventList.findAll({
+                where:{
+                    mail_id:email,
+                    calendar_id:calendarId,
+                    type:2
+                }
+            })
+            return eventList;
         }catch(error){
+            console.log('error ====>',error);
             return promise.reject(error);
         }
     }

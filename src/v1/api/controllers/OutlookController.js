@@ -50,9 +50,11 @@ class OutlookController{
     async getCalenderEvents(req,res){
         try{
             await validator.validateCalenderEvent(req.body);
-            let calenderList = await OutlookService.getCalenderEvents(req.headers.authorization,req.body.calendar_id);
+            req.body.email = req.body.email.trim();
+            let calenderList = await OutlookService.getCalenderEvents(req.headers.authorization,req.body.calendar_id,req.body.email);
             return responseHelper.success(res,'',calenderList);
         }catch(error){
+            console.log('error ====>',error);
             return responseHelper.error(res, error.message || 'INTERNAL_SERVER_ERROR', error.code || 500);
         }
     }
