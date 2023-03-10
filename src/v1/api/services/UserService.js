@@ -228,25 +228,36 @@ class UserService {
       endDate = new Date(endDate);
       // console.log(date)
       let where2 = {
-        type: 0
-      }
-      let where = {
+        type: 0,
         createdAt: {
           [Op.gte]: startDate,
           [Op.lte]: endDate
         }
-      };
+      }
+      let where = {};
 
       if (google_id != null) {
+        where.createdAt = {
+          [Op.gte]: startDate,
+          [Op.lte]: endDate
+        }
         where.mail_id = google_id,
           where.calendar_id = googleCalendar_id,
           where.type = 1
       }
       if (outlook_id != null) {
+        where.createdAt = {
+          [Op.gte]: startDate,
+          [Op.lte]: endDate
+        }
         where.mail_id == outlook_id
         where.type == 2
       }
       if (google_id != null) {
+        where.createdAt = {
+          [Op.gte]: startDate,
+          [Op.lte]: endDate
+        }
         where.apple_id == apple_id
         where.type == 3
       }

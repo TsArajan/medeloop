@@ -29,6 +29,7 @@ class UserController {
     }
   }
 
+  // get eventlist from perticular calendar id and store in database
   async eventList(req, res) {
     try {
       let user = await UserService.eventList(req.body)
@@ -40,6 +41,7 @@ class UserController {
     }
   }
 
+  //created custom event on medeloop calendar
   async addEvent(req, res) {
     try {
       let user = await UserService.addEvent(req.body)
@@ -51,6 +53,7 @@ class UserController {
     }
   }
 
+  //list all event for specific user
   async allEventList(req, res) {
     try {
       let user = await UserService.allEventList(req.body)
@@ -62,6 +65,7 @@ class UserController {
     }
   }
 
+  // get patient and doctor list
   async patientDetail(req, res) {
     try {
       let user = await UserService.patientDetail(req.body)
@@ -73,6 +77,7 @@ class UserController {
     }
   }
 
+  //get event details by id
   async getEventByID(req, res) {
     try {
       let user = await UserService.getEventByID(req.body)
@@ -84,6 +89,7 @@ class UserController {
     }
   }
 
+  //edit custom event 
   async editEvent(req, res) {
     try {
       let user = await UserService.editEvent(req.body)
@@ -95,6 +101,7 @@ class UserController {
     }
   }
 
+  //delete custom event
   async deleteEvent(req, res) {
     try {
       let user = await UserService.deleteEvent(req.body)
