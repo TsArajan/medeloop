@@ -1,4 +1,4 @@
-const { User, sequelize, EventList, TaskDetails } = require('../../../data/models/index');
+const { User, sequelize, EventList, TaskDetails, EventPatient } = require('../../../data/models/index');
 const { QueryTypes, Op, where } = require('sequelize');
 const promise = require('bluebird')
 const axios = require('axios');
@@ -24,21 +24,51 @@ class TodotaskService {
         collaborate,
         patient,
         other
-      } = body, time = moment().format("YYYY-MM-DD HH:mm:ss.SSSZ");
+      } = body, time = moment().format("YYYY-MM-DD HH:mm:ss.SSSZ"), patient_lsit, collaborate_list;
 
       let data = {
         creater_id: user_id,
         name,
         description,
         date,
-        collaborate,
-        patient,
         other,
         createdAt: time,
         updatedAt: time
       };
 
-      let todotask = await TaskDetails.create(data)
+      let todotask = await TaskDetails.create(data);
+      if (todotask) {
+        if (collaborate && collaborate.length) {
+          let data = []
+          collaborate.map(x => {
+            data.push({
+              event_id: todotask.id,
+              patient_id: x,
+              creator_id: user_id,
+              is_collaborate: 1,
+              createdAt: time,
+              updatedAt: time
+            });
+          })
+
+          await EventPatient.bulkCreate(data)
+        }
+        if (patient && patient.length) {
+          let data = []
+          patient.map(x => {
+            data.push({
+              event_id: todotask.id,
+              patient_id: x,
+              creator_id: user_id,
+              createdAt: time,
+              updatedAt: time
+            });
+          })
+          await EventPatient.bulkCreate(data)
+        }
+      }
+      todotask.collaborate = collaborate
+      todotask.patient = patient
 
       return todotask || [];
     } catch (error) {
