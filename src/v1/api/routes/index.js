@@ -2,7 +2,6 @@ const express = require('express');
 require('express-group-routes');
 const UserController = require('../controllers/UserController');
 const OutlookController = require('../controllers/OutlookController');
-const appleController = require('../controllers/appleController');
 const TaskController = require('../controllers/taskController')
 const router = express.Router()
 const GlobalAuthClass = require('../../../modules/middleware/auth');
@@ -48,10 +47,5 @@ router.group('/todotask', (todotask) => {
   todotask.post('/deletetask', [TaskController.deletetask]);
   // edit to-do task
   todotask.post('/editTask', [TaskController.editTask]);
-})
-
-// app calendar api
-router.group('/apple', (apple) => {
-  apple.get('/auth', [appleController.auth])
 })
 module.exports = router
