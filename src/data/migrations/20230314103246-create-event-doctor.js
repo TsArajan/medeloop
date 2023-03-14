@@ -1,10 +1,8 @@
 'use strict';
-
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('event_patient', {
+    await queryInterface.createTable('event_doctor', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -22,7 +20,7 @@ module.exports = {
         comment: 'foreign key of event_lists table',
         allowNull: true
       },
-      patient_id: {
+      doctor_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'patient_detail',
@@ -47,6 +45,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('event_patient');
+    await queryInterface.dropTable('event_doctor');
   }
 };

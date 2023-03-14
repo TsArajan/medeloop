@@ -1,4 +1,4 @@
-const { User, sequelize, EventList, TaskDetails, EventPatient } = require('../../../data/models/index');
+const { User, sequelize, EventList, TaskDetails, EventPatient, EventDoctor } = require('../../../data/models/index');
 const { QueryTypes, Op, where } = require('sequelize');
 const promise = require('bluebird')
 const axios = require('axios');
@@ -43,15 +43,14 @@ class TodotaskService {
           collaborate.map(x => {
             data.push({
               event_id: todotask.id,
-              patient_id: x,
+              doctor_id: x,
               creator_id: user_id,
-              is_collaborate: 1,
               createdAt: time,
               updatedAt: time
             });
           })
 
-          await EventPatient.bulkCreate(data)
+          await EventDoctor.bulkCreate(data)
         }
         if (patient && patient.length) {
           let data = []
@@ -163,13 +162,20 @@ class TodotaskService {
         user_id = 1
       } = body;
 
-      let todotask = await TaskDetails.findAll({
-        where: {
-          creater_id: user_id
-        }
-      })
+      let todotask = await sequelize.query(`select td.id, creater_id, name, description, date, patient, other, ARRAY_AGG(ep.patient_id) as patient, array_agg(ed.doctor_id) as collaborate from task_details td left join event_patient ep on ep.event_id = td.id left join event_doctor ed on ed.event_id = td.id where creater_id = ${user_id} group by td.id`);
+      todotask = todotask[0];
+      if (todotask.length) {
+        todotask.map(x => {
+          if (x.collaborate[0] == null)
+            x.collaborate = []
+          if (x.patient[0] == null)
+            x.patient = []
+          x.collaborate = [...new Set(x.collaborate)]
+          x.patient = [...new Set(x.patient)]
 
-      return todotask || [];
+        })
+      }
+      return todotask;
     } catch (error) {
       console.log("calenderList Service Error=====>>>>", error)
       return promise.reject(error)
