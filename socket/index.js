@@ -1,36 +1,26 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const socket = require('socket.io')
-const env = require('dotenv');
-env.config();
-
 const app = express();
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static('public'));
-app.set('view engine', 'ejs');
-var port = process.env.PORT || 3000;
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
-//Render Index page
 app.get('/', (req, res) => {
-    res.render('index')
-})
+  res.sendFile(__dirname + '/index.html');
+});
 
-//Get username and roomname from form and pass it to room
-app.post('/room', (req, res) => {
-    roomname = req.body.roomname;
-    username = req.body.username;
-    res.redirect(`/room?username=${username}&roomname=${roomname}`)
-})
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
+    console.log('message: ' + msg);
+  });
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
-//Rooms
-app.get('/room', (req, res)=>{
-    res.render('room')
-})
-
-//Start Server
-const server = app.listen(port, () => {
-    console.log(`Server Running on ${port}`)
-})
-
-const io = socket(server);
-require('./utils/socket')(io);
+server.listen(3000, () => {
+  console.log('listening on *:3000');
+});
