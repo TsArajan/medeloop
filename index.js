@@ -73,7 +73,6 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     const multer = require('multer')
     if (err instanceof multer.MulterError) {
-        console.log('err ===>', err);
         if (err.code === 'LIMIT_FILE_SIZE') {
             err.message = err.field + ' file size is too large.'
         }
