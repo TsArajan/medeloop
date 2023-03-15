@@ -2,7 +2,8 @@ const express = require('express');
 require('express-group-routes');
 const UserController = require('../controllers/UserController');
 const OutlookController = require('../controllers/OutlookController');
-const TaskController = require('../controllers/taskController')
+const TaskController = require('../controllers/taskController');
+const GroupController = require('../controllers/GroupController');
 const router = express.Router()
 const GlobalAuthClass = require('../../../modules/middleware/auth');
 
@@ -24,22 +25,33 @@ router.post('/editEvent', UserController.editEvent);
 router.post('/deleteEvent', UserController.deleteEvent);
 
 /* outlook calendar apis */
-router.group('/outlook',(router) => {
-    /* generate outlook user access_token */
-    router.post('/get-access-token', OutlookController.getAccessToken);
-    /* get outlook user access refresh token */
-    router.post('/refresh-token', OutlookController.getRefreshToken);
-    /* get outlook user calender list */
-    router.post('/get-calendar-list', GlobalAuthClass.validateOutlookToken,OutlookController.getCalenderList);
-    /* get outlook user calender event list */
-    router.post('/get-calendar-events', GlobalAuthClass.validateOutlookToken,OutlookController.getCalenderEvents);
+router.group('/outlook', (router) => {
+  /* generate outlook user access_token */
+  router.post('/get-access-token', OutlookController.getAccessToken);
+  /* get outlook user access refresh token */
+  router.post('/refresh-token', OutlookController.getRefreshToken);
+  /* get outlook user calender list */
+  router.post('/get-calendar-list', GlobalAuthClass.validateOutlookToken, OutlookController.getCalenderList);
+  /* get outlook user calender event list */
+  router.post('/get-calendar-events', GlobalAuthClass.validateOutlookToken, OutlookController.getCalenderEvents);
 })
-
 router.group('/todotask', (todotask) => {
   todotask.post('/createTask', [TaskController.createTask]);
   todotask.post('/getTaskById', [TaskController.getTaskById]);
   todotask.post('/taskList', [TaskController.taskList]);
   todotask.post('/deletetask', [TaskController.deletetask]);
   todotask.post('/editTask', [TaskController.editTask]);
+})
+/* chat apis */
+router.group('/chat', (router) => {
+  /* chat group crud apis */
+  router.group('/group', (router) => {
+    /* chat group list api */
+    router.post('/' ,GroupController.index);
+    /* add new or update chat group api */
+    router.post('/create',GroupController.createOrUpdate);
+    /* add new or update chat group api */
+    router.post('/delete',GroupController.delete);
+  });
 })
 module.exports = router

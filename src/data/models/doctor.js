@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class PatientDetails extends Model {
+  class Doctor extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,31 +13,35 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  PatientDetails.init({
+  Doctor.init({
+    uuid:{
+      type: DataTypes.UUID,
+      allowNull: true,
+      defaultValue:DataTypes.UUIDV4
+    },
     name: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false,
     },
     profile_pic: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     age: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false,
     },
     is_active: {
       type: DataTypes.SMALLINT,
-      defaultValue: 1
-    },
-    is_doctor: {
-      type: DataTypes.SMALLINT,
-      defaultValue: 0
+      allowNull: false,
+      defaultValue: 1,
+      comment:'0=inactive,1=active'
     },
   }, {
+    paranoid:true,
     sequelize,
-    tableName: 'patient_detail',
-    modelName: 'PatientDetails',
+    tableName: 'doctors',
+    modelName: 'Doctor',
     scopes:{
       active:{
         where:{
@@ -46,5 +50,5 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
   });
-  return PatientDetails;
+  return Doctor;
 };

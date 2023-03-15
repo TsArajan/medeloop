@@ -17,7 +17,6 @@ class UserController {
   async calenderList(req, res) {
     try {
       let user = await UserService.calenderList(req.body)
-      // console.log('user ========>', user);
       return responseHelper.success(res, 'LOGIN_SUCCESS', user);
     } catch (error) {
       console.log('error =====>', error);
@@ -29,7 +28,6 @@ class UserController {
   async eventList(req, res) {
     try {
       let user = await UserService.eventList(req.body)
-      // console.log('user ========>', user);
       return responseHelper.success(res, 'LOGIN_SUCCESS', user);
     } catch (error) {
       console.log('error =====>', error);
@@ -41,7 +39,6 @@ class UserController {
   async addEvent(req, res) {
     try {
       let user = await UserService.addEvent(req.body)
-      // console.log('user ========>', user);
       return responseHelper.success(res, 'LOGIN_SUCCESS', user);
     } catch (error) {
       console.log('error =====>', error);
@@ -53,7 +50,6 @@ class UserController {
   async allEventList(req, res) {
     try {
       let user = await UserService.allEventList(req.body)
-      // console.log('user ========>', user);
       return responseHelper.success(res, 'LOGIN_SUCCESS', user);
     } catch (error) {
       console.log('error =====>', error);
@@ -65,7 +61,6 @@ class UserController {
   async patientDetail(req, res) {
     try {
       let user = await UserService.patientDetail(req.body)
-      // console.log('user ========>', user);
       return responseHelper.success(res, 'LOGIN_SUCCESS', user);
     } catch (error) {
       console.log('error =====>', error);
@@ -77,10 +72,9 @@ class UserController {
   async getEventByID(req, res) {
     try {
       let user = await UserService.getEventByID(req.body)
-      // console.log('user ========>', user);
       return responseHelper.success(res, 'LOGIN_SUCCESS', user);
     } catch (error) {
-      console.log('error =====>', error);
+      console.log('error ====   =>', error);
       return responseHelper.error(res, error.message || '', error.code || 500);
     }
   }
@@ -89,7 +83,6 @@ class UserController {
   async editEvent(req, res) {
     try {
       let user = await UserService.editEvent(req.body)
-      // console.log('user ========>', user);
       return responseHelper.success(res, 'LOGIN_SUCCESS', user);
     } catch (error) {
       console.log('error =====>', error);
@@ -101,7 +94,6 @@ class UserController {
   async deleteEvent(req, res) {
     try {
       let user = await UserService.deleteEvent(req.body)
-      // console.log('user ========>', user);
       return responseHelper.success(res, 'LOGIN_SUCCESS', user);
     } catch (error) {
       console.log('error =====>', error);

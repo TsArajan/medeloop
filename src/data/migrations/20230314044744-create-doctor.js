@@ -2,29 +2,34 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('patient_detail', {
+    await queryInterface.createTable('doctors', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      uuid:{
+        type: Sequelize.UUID,
+        allowNull: true,
+      },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       profile_pic: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       age: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       is_active: {
         type: Sequelize.SMALLINT,
-        allowNull: false,
-        defaultValue: 1
+        allowNull: true,
+        defaultValue: 1,
+        comment:'0=inactive,1=active'
       },
       createdAt: {
         allowNull: false,
@@ -33,10 +38,14 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deletedAt: {
+        allowNull: true,
+        type: Sequelize.DATE
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('patient_detail');
+    await queryInterface.dropTable('doctors');
   }
 };

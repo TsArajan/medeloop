@@ -26,7 +26,7 @@ app.use(bodyParser.json({
 }))
 app.use(cookieParser());
 app.use(session({
-    secret: 'levaApp',
+    secret: 'medeloop',
     saveUninitialized: false,
     resave: false
 }));
@@ -44,6 +44,9 @@ app.use((req, res, next) => {
 });
 const corsOptions = {
     origin: "*",
+    allowedHeaders: [
+      'Content-Type',
+    ],
     credentials: true,
 };
 
